@@ -1,0 +1,43 @@
+﻿
+@{
+    Layout = null;
+}
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="~/Content/StyleSheet.css" />
+    <script src="~/scripts/JavaScript.js"></script>
+</head>
+
+<body onload="hideloader()" style="background-image: url('../../Slike/wood.jpg');  background-repeat: no-repeat">
+    <br />
+    <div id="loading"></div>
+
+    <form id="loginfrm" action="/Home/LoginTest" style="display:none;">
+        <div style="width: 300px; height: 180px; margin: 0 auto; background: rgb(233, 235, 228); border-radius: 10px">
+            <div style="margin-left: 11px">
+                <div>
+                    <label>User name:</label>
+                </div>
+                <div>
+                    <input type="text" name="name" placeholder="Username" class="form-control" style="background: aqua" required />
+                </div>
+
+                <div>
+                    <label>Password:</label>
+                </div>
+                <div>
+                    <input type="password" name="password" placeholder="Password" class="form-control" style="background: aqua" required />
+                </div><br />
+
+                <div>
+                    <input style="float: right; margin-right: 10px;" type="submit" value="Login" class="btn btn-danger" />
+                </div><br />
+            </div>
+        </div>
+    </form>
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" type="text/css" />
+    <script src="~/Scripts/modernizr-2.6.2.js"></script>
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+</body>

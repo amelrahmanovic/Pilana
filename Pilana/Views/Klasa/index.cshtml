@@ -1,0 +1,36 @@
+﻿@using Pilana.Models;
+@{
+    ViewBag.Title = "Klasa";
+    List<Klasa> Klase = (List<Klasa>)ViewData["Klase"];
+}
+
+<h2>Klasa</h2>
+
+
+<form action="/Klasa/Snimi">
+    <label>Klasa:</label>
+    <div class="form-group">
+        <label>Naziv:</label>
+        <input class="form-control" type="text" name="Naziv" required />
+    </div>
+   
+    <input class="btn btn-default" type="submit" value="Sačuvati" />
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <th>Naziv:</th>
+        <th>Akcija:</th>
+    </thead>
+    @foreach (Klasa x in Klase)
+    {
+        <tr>
+            <th>
+                @x.Naziv
+            </th>
+            <th>
+                <a class="btn btn-danger" href="/Klasa/Izbrisi?id=@x.Id">Izbriši</a>
+            </th>
+        </tr>
+    }
+</table>

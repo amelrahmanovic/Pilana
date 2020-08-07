@@ -1,0 +1,38 @@
+﻿@using Pilana.Models
+@{
+    ViewBag.Title = "Narudzba";
+    Klijent k = (Klijent) ViewData["k"];
+    List<Narudzba> n = (List<Narudzba>)ViewData["n"];
+}
+
+Klijent: <label> @k.Ime @k.Prezime</label> <br />
+Adresa: <label> @k.Adresa</label> <br />
+Kontakt broj: <label> @k.KontaktBroj</label> <br />
+
+<a class="btn btn-default" href="/Klijent/">Nazad</a> <br />
+
+<form action="/Narudzba/Snimi">
+
+    <input type="hidden" value="@k.Id" name="Id" />
+
+    <input class="btn btn-success" type="submit" value="Nova narudžba" />
+</form>
+
+<table class="table table-striped">
+    <thead>
+    <th>Datum kreiranja narudžbe:</th>
+    <th>Akcija:</th>
+    </thead>
+
+    @foreach (Narudzba x in n)
+    {
+        <tr>
+            <th>
+                @x.Datum
+            </th>
+            <th>
+                <a class="btn btn-success" href="/NarudzbaProizvodi/Index?id=@x.KlijentId&Nid=@x.Id">Pregled stavki</a>
+            </th>
+        </tr>
+    }
+</table>

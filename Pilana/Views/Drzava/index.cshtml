@@ -1,0 +1,35 @@
+﻿@using Pilana.Models
+
+@{
+    ViewBag.Title = "Drzava";
+    List<Drzava> d = (List<Drzava>)ViewData["d"];
+    Drzava dr = (Drzava) ViewData["dr"];
+}
+
+<a class="btn btn-default" href="/Home/">Nazad</a>
+
+<form action="/Drzava/Snimi">
+    <input type="hidden" name="id" value="@dr.Id" />
+    <label>Država:</label>
+    <input class="form-control" type="text" name="NazivDrzave" value="@dr.Naziv" />
+    <br />
+    <input class="btn btn-success" type="submit" value="Sačuvati" />
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <th>Država:</th>
+        <th>Akcija:</th>
+    </thead>
+    @foreach (Drzava x in d)
+    {
+        <tr>
+            <th>
+                @x.Naziv
+            </th>
+            <th>
+                <a class="btn btn-default glyphicon glyphicon-pencil" href="/Drzava/Edit?id=@x.Id"></a>
+            </th>
+        </tr>
+        }
+    </table>

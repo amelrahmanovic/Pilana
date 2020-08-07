@@ -1,0 +1,61 @@
+﻿@using Pilana.Models;
+@{
+    ViewBag.Title = "Administators";
+    List<Administrator> Administators = (List<Administrator>)ViewData["Administrators"];
+    Administrator ad = (Administrator)ViewData["ad"];
+}
+
+@if (ad.Ime != null)
+{
+    <h2>Postojeći administrator:</h2>
+}
+else
+{
+    <h2>Novi administrator:</h2>  
+}
+
+<form action="/Administrator/Snimi" class="form-inline">
+    <input type="hidden" name="id" value="@ad.Id" />
+    <div class="form-group">
+        <label>Ime:</label>
+        <input class="form-control" type="text" name="Ime" value="@ad.Ime" required style="width: 100px" />
+    </div>
+    <div class="form-group">
+        <label>Prezime:</label>
+        <input class="form-control" type="text" name="Prezime" value="@ad.Prezime" required style="width: 100px" />
+    </div>
+    <div class="form-group">
+        <label>User:</label>
+        <input class="form-control" type="text" name="KorisnickoIme" value="@ad.KorisnickoIme" required style="width: 100px" />
+    </div>
+    <div class="form-group">
+        <label>Lozinka:</label>
+        <input class="form-control" type="password" name="Lozinka" required style="width: 100px" />
+    </div>
+    <input class="btn btn-default" type="submit" value="Sačuvati" />
+</form>
+
+<table class="table table-striped">
+    <thead>
+    <th>Administrator:</th>
+    <th>User/Lozinka:</th>
+    <th>Akcija:</th>
+    </thead>
+    @foreach (Administrator x in Administators)
+    {
+        <tr>
+            <th>
+                @x.Ime @x.Prezime
+            </th>
+            <th>
+                @x.KorisnickoIme <label> / ******</label>
+            </th>
+            <th>
+                <a class="btn btn-danger" href="/Administrator/Brisi?id=@x.Id">Izbriši</a>
+                <a class="btn btn-success" href="/Administrator/Index?id=@x.Id">Edit</a>
+            </th>
+        </tr>
+    }
+</table>
+
+

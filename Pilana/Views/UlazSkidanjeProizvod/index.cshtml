@@ -1,0 +1,103 @@
+﻿@using Pilana.Models
+@{
+    ViewBag.Title = "Gradja";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    UlazSkidanje us = (UlazSkidanje)ViewData["us"];
+    Ulaz u = (Ulaz)ViewData["u"];
+    List<Proizvod> p = (List<Proizvod>)ViewData["p"];
+    List<UlazSkidanjeProizvod> usp = (List<UlazSkidanjeProizvod>)ViewData["usp"];
+    Valuta v = (Valuta)ViewData["v"];
+    string Block = (string)ViewData["Block"];
+    double PlaniranoM3 = (double)ViewData["PlaniranoM3"];
+    double OstvarenoM3 = (double)ViewData["OstvarenoM3"];
+}
+
+<label>Datum dostave: @u.DatumDostave</label> <br />
+<label>Datum rezanja: @us.DatumKreiranja</label> <br />
+<label>Broj balvana: @u.BrojBalvana / Skinuto: @us.SkinutoBalvana </label> <br />
+<label>Cijena po metru kubnom: @u.CijenaM3 @v.Val</label> <br />
+<label>Metara kubnih: @u.M3</label> <br /><br />
+<label>Planirano m3/ Ostvareno m3: @PlaniranoM3 / @OstvarenoM3 </label> <br /><br />
+
+<a class="btn btn-success" href="/UlazSkidanje/Index?id=@u.Id">Nazad</a> <br /><br />
+
+
+@if (Block != "1")
+{
+    <form action="/UlazSkidanjeProizvod/Snimi" class="form-inline">
+        <input type="hidden" name="UlazSkidanjeId" value="@us.Id" />
+        <div class="form-group">
+            <label>Proizvod:</label>
+            <select class="form-control" name="Proizvod" id="Proizvod">
+                @foreach (Proizvod x in p)
+                {
+                    <option class="form-control" value="@x.Id">@x.Naziv Duzina: @x.Duzina Visina: @x.Visina Debljina: @x.Sirina Cijena: @x.CijenaM3 Komada: @x.Kolicina</option>
+                }
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Planirano:</label>
+            <input class="form-control" type="number" name="PlaniranaKolicina" min="1" required style="width: 100px" />
+        </div>
+        <div class="form-group">
+            <label>Ostvareno:</label>
+            <input class="form-control" type="number" name="Kolicina" value="0" required style="width: 100px" />
+        </div>
+        <div class="form-group">
+            <label>Kreirano:</label>
+            <input class="form-control" type="text" name="Datum" value="@DateTime.Now" required style="width: 170px" />
+        </div>
+        <input class="btn btn-success" type="submit" value="Snimi" />
+    </form>
+}
+<br />
+
+<table class="table table-striped">
+    <thead>
+    <th>Proizvod:</th>
+    <th>Dimenzije:</th>
+    <th>Cijena (@v.Val):</th>
+    <th>Klasa:</th>
+    <th>Planirano komada/ Ostvareno komada:</th>
+    <th>Datum i vrijeme kreiranja:</th>
+    <th>Akcija:</th>
+    </thead>
+
+    @foreach (UlazSkidanjeProizvod x in usp)
+    {
+        <tr>
+            <th>
+                @x.Proizvod.Naziv
+            </th>
+            <th>
+                Duzina: @x.Proizvod.Duzina Sirina: @x.Proizvod.Sirina Debljina: @x.Proizvod.Visina
+            </th>
+            <th>
+                @x.Proizvod.CijenaM3
+            </th>
+            <th>
+                @x.Proizvod.Klasa.Naziv
+            </th>
+            <th>
+                @x.PlaniranaKolicina/ @x.Kolicina
+            </th>
+            <th>
+                @x.Datum
+            </th>
+            <th>
+                @if (Block != "1")
+                {
+                    <form action="/UlazSkidanjeProizvod/OstvarenaKolicinaSnimi">
+                        <input type="hidden" name="id" value="@x.Id" />
+                        <div class="form-group">
+                            <label>Ostvarena količina:</label>
+                            <input class="form-control" type="number" name="OstvarenaKolicina" />
+                        </div>
+                        <input class="btn btn-info" type="submit" value="Snimi" />
+                    </form>
+                }
+
+            </th>
+        </tr>
+    }
+</table>

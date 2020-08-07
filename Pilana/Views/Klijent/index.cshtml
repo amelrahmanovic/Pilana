@@ -1,0 +1,99 @@
+﻿@using Pilana.Models;
+@{
+    ViewBag.Title = "Klijent";
+    List<Klijent> Klijenti = (List<Klijent>) ViewData["Klijenti"];
+    List<Drzava> d = (List<Drzava>) ViewData["d"];
+    Klijent k = (Klijent) ViewData["k"];
+}
+
+<form action="/Klijent/Snimi">
+    @if (k.Ime != null)
+    {
+        <h2>Postojeći klijent:</h2>
+    }
+    else
+    {
+        <h2>Novi klijent:</h2>
+    }
+
+    <input type="hidden" value="@k.Id" name="Id" />
+
+    <div class="form-inline">
+        <input class="form-control" type="text" name="Ime" value="@k.Ime" placeholder="Ime" required />
+
+        <input class="form-control" type="text" name="Prezime" value="@k.Prezime" placeholder="Prezime" required />
+
+        <input class="form-control" type="text" name="Adresa" value="@k.Adresa" placeholder="Adresa" required />
+
+        <input class="form-control" type="text" name="KontaktBroj" value="@k.KontaktBroj" placeholder="Kontakt broj" required />
+    </div>
+
+    <br />
+
+    <div class="form-inline">
+        <label>Država:</label> <br />
+        <select class="form-control" name="Drzava" id="Drzava">
+            @foreach (Drzava x in d)
+            {
+                if (x.Id == k.DrzavaId)
+                {
+                    <option class="form-control" value="@x.Id" selected>@x.Naziv</option>
+                }
+                else
+                {
+                    <option class="form-control" value="@x.Id">@x.Naziv</option>
+                }
+            }
+        </select>
+        <a class="btn btn-info glyphicon glyphicon-plus" href="/Drzava"></a>
+    </div>
+
+    <br />
+    <div class="form-inline">
+        @if (@k.Id != 0)
+        {
+            <a class="btn btn-default" href="/Klijent">Otkaži</a>
+        }
+        <input class="btn btn-success" type="submit" value="Sačuvati" />
+    </div>
+
+</form>
+
+<table class="table table-striped">
+    <thead>
+    <th>Ime:</th>
+    <th>Prezime:</th>
+    <th>Država:</th>
+    <th>Adresa:</th>
+    <th>Kontakt broj:</th>
+    <th>Akcija:</th>
+     </thead>
+
+    @foreach (Klijent x in Klijenti)
+    {
+        <tr>
+            <th>
+                @x.Ime 
+            </th>
+            <th>
+                @x.Prezime
+            </th>
+            <th>
+                @x.Drzava.Naziv
+            </th>
+            <th>
+                @x.Adresa
+            </th>
+            <th>
+                @x.KontaktBroj
+            </th>
+            <th>
+                <a class="btn btn-default" href="/Narudzba/Index?id=@x.Id"> <div class="glyphicon glyphicon-briefcase"></div> </a>
+                <a class="btn btn-default" href="/Klijent/Index?id=@x.Id"> <div class="glyphicon glyphicon-edit"></div> </a>
+                <a class="btn btn-danger" href="/Klijent/Delete?id=@x.Id"> <div class="glyphicon glyphicon glyphicon-trash"></div> </a>
+            </th>
+        </tr>
+    }
+</table>
+
+

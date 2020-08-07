@@ -1,0 +1,54 @@
+﻿
+@{
+    ViewBag.Title = "Stanje";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string Od = (string)ViewData["Od"];
+    string Do = (string)ViewData["Do"];
+    double? Placeno = (double?)ViewData["Placeno"];
+    string v = (string)ViewData["v"];
+    double? Skladiste = (double?)ViewData["s"];
+    double? Prodano = (double?)ViewData["p"];
+}
+<form class="form-inline" action="/Ulaz/Stanje">
+    <label>Od:</label>
+    <input type="date" name="DatumOd" class="form-control" value="@Od" required style="width: 150px" />
+
+    <label>Do:</label>
+    <input type="date" name="DatumDo" class="form-control" value="@Do" required style="width: 150px" />
+
+    <input type="submit" class="btn btn-info" value="Pretraga" />
+</form>
+
+<br />
+@if (Placeno != null)
+{
+    <div>
+        <table>
+            <tbody>
+                <tr>
+                    <td> Plaćeno: </td>
+                    <td> <label> @Placeno </label> </td>
+                    <td> @v </td>
+                </tr>
+
+                <tr>
+                    <td> Skladište: </td>
+                    <td> <label> @Skladiste </label> </td>
+                    <td> @v </td>
+                </tr>
+
+                <tr>
+                    <td> Prodano: </td>
+                    <td> <label> @Prodano </label> </td>
+                    <td> @v </td>
+                </tr>
+
+                <tr>
+                    <td> SUM (Prodano+Skladište-Plaćeno): </td>
+                    <td> <label> @(Prodano+Skladiste-Placeno) </label> </td>
+                    <td> @v </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+}

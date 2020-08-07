@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" type="text/css" />
+    <script src="~/Scripts/modernizr-2.6.2.js"></script>
+    <link href="~/scripts/MyCss.css" rel="stylesheet" />
+</head>
+<body>
+    @if (Request.Cookies["userInfo"] == null)
+    {
+        Response.Redirect("/Home/Login");
+    }
+    @if (Request.Cookies["userInfo"] != null)
+    {
+        <div class="navbar navbar-inverse navbar-fixed-top" style="border-bottom-color: rgb(38, 174, 230); border-bottom-width: 8px; border-radius: 0px 0px 30px 30px">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    @Html.ActionLink("Klijent", "Index", "Klijent", new { area = "" }, new { @class = "navbar-brand" })
+                    @Html.ActionLink("Ulaz balvana", "Index", "Ulaz", new { area = "" }, new { @class = "navbar-brand" })
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+
+                        @Html.ActionLink("Proizvod", "Index", "Proizvod", new { area = "" }, new { @class = "navbar-brand" })
+                        @Html.ActionLink("Nalozi", "RadniNalozi", "UlazSkidanje", new { area = "" }, new { @class = "navbar-brand" })
+                        @Html.ActionLink("Zarada", "Stanje", "Ulaz", new { area = "" }, new { @class = "navbar-brand" })
+                        @Html.ActionLink("Administrator", "Index", "Administrator", new { area = "" }, new { @class = "navbar-brand" })
+                    </ul>
+                        
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            @Html.ActionLink(Server.HtmlEncode(Request.Cookies["userInfo"]["userName"]), "Password", "Administrator", new { area = "" }, new { @class = "navbar-brand" })
+                            @Html.ActionLink(" ", "Logout", "Administrator", new { area = "" }, new { @class = "navbar-brand glyphicon glyphicon-off" })
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <br />
+
+        <div class="container body-content">
+            @RenderBody()
+            <hr />
+            <footer>
+                <p>Copyright &copy; 
+                    <a target="_blank" style="text-decoration:none" href="http://amel.ddns.net">Amel Rahmanović</a> <label>&</label>
+                    <a target="_blank" style="text-decoration:none" href="https://websoft.ba/">WEBSOFT</a>
+                </p>
+            </footer>
+        </div>
+
+        <script src="~/Scripts/jquery-1.10.2.js"></script>
+        <script src="~/Scripts/bootstrap.js"></script>
+    }
+</body>
+</html>

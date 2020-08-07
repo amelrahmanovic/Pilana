@@ -1,0 +1,16 @@
+﻿@using Pilana.Models
+@{
+    ViewBag.Title = "Valuta";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    Valuta v = (Valuta)ViewData["v"];
+}
+
+<form action="/Valuta/Snimi">
+    <input type="hidden" value="@v.Id" name="id" />
+     <div>
+        <label>Valuta: </label>
+        <input class="form-control" type="text" name="val" value="@v.Val" required />
+    </div>
+    <br />
+    <input class="btn btn-default" type="submit" value="Sačuvati" />
+</form>

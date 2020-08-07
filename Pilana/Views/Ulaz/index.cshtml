@@ -1,0 +1,144 @@
+﻿@using Pilana.Models
+
+@{
+    ViewBag.Title = "Ulaz";
+    List<UlazVM> u = (List<UlazVM>)ViewData["u"];
+    List<Klasa> k = (List<Klasa>)ViewData["k"];
+    Ulaz ul = (Ulaz)ViewData["ul"];
+    int Balvani = (int)ViewData["Balvani"];
+    Valuta v = (Valuta)ViewData["v"];
+    List<KlasaVM> kl = (List<KlasaVM>)ViewData["KlasaVM"];
+}
+
+<h3>Ukupno balvana na skladištu: @Balvani</h3>
+<h3>
+    Ukupno ~m3 na skladištu: @{
+        double m3 = 0;
+        foreach (UlazVM x in u)
+        {
+            if (x.BrojBalvana != x.BrojBalvanaIskoristeno)
+            {
+                m3 += (x.M3 / x.BrojBalvana) * (x.BrojBalvana - x.BrojBalvanaIskoristeno);
+            }
+        }
+    }
+    @(m3)
+</h3>
+
+
+<table class="table table-striped">
+    <thead>
+        <th>Klasa:</th>
+        <th>Dostupno balvana:</th>
+        <th>Broj balvana/ Iskorišteno:</th>
+    </thead>
+
+    @foreach (KlasaVM x in kl)
+    {
+        <tr>
+            <th>
+                @x.Naziv
+            </th>
+            <th>
+                @(x.BalvanaNaSkladistu - x.BalvanaIskoristeno)
+            </th>
+            <th>
+                @x.BalvanaNaSkladistu / @x.BalvanaIskoristeno
+            </th>
+        </tr>
+    }
+</table>
+
+
+      <form action="/Ulaz/Snimi">
+
+          <div class="form-inline">
+              @if (ul.BrojBalvana != 0)
+              {
+                  <h2>Postojeći ulaz balvana:</h2>
+              }
+              else
+              {
+                  <h2>Novi ulaz balvana:</h2>
+              }
+              <input type="hidden" name="id" value="@ul.Id" />
+
+            
+                  <label>Klasa:</label>
+                  <select class="form-control" name="Klasa" id="Klasa">
+                      @foreach (Klasa x in k)
+                      {
+                          if (x.Id == ul.KlasaId)
+                          {
+                              <option class="form-control" value="@x.Id" selected>@x.Naziv</option>
+                          }
+                          else
+                          {
+                              <option class="form-control" value="@x.Id">@x.Naziv</option>
+                          }
+                      }
+                  </select>
+                  <a class="btn btn-info glyphicon glyphicon-plus" href="/Klasa"></a>
+              
+
+              <label>Broj balvana:</label>
+              <input class="form-control" type="number" name="BrojBalvana" value="@ul.BrojBalvana" required style="width: 100px" />
+
+              <label>Metara kubnih:</label>
+              <input class="form-control" type="text" name="M3" value="@ul.M3" style="width: 100px" required />
+
+              <label>Cijena/m3 (@v.Val):</label>
+
+              <input class="form-control" type="text" name="CijenaM3" value="@ul.CijenaM3" style="width: 100px" required />
+              <a class="btn btn-info" href="/Valuta/">+</a>
+
+              <label>Datum dostave:</label>
+              <input class="form-control" type="text" name="DatumDostave" value="@DateTime.Now" style="width: 170px" required />
+
+              <input class="btn btn-success" type="submit" value="Sačuvati" />
+          </div>
+          <br />  
+      </form>
+
+<table class="table table-striped">
+    <thead>
+        <th>Broj balvana/ Iskorišteno:</th>
+        <th>Klasa:</th>
+    <th>Metara kubnih:</th>
+    <th>Cijena (@v.Val):</th>
+    <th>Datum i vrijeme dostave:</th>
+    <th>Akcija:</th>
+    </thead>
+
+    @foreach (UlazVM x in u)
+    {
+    <tr>
+        <th>
+            @x.BrojBalvana / @x.BrojBalvanaIskoristeno
+        </th>
+        <th>
+            @x.Klasa
+        </th>
+        <th>
+            @x.M3
+        </th>
+        <th>
+            @x.CijenaM3
+        </th>
+        <th>
+            @x.DatumDostave
+        </th>
+        <th>
+            <a class="btn btn-success" href="/UlazSkidanje/Index?id=@x.Id">Skidanje sa skladišta 'Rezanje'</a>
+            @if (x.BrojBalvana == x.BrojBalvanaIskoristeno)
+            {
+                <a class="btn btn-danger" href="/Ulaz/Zavrsi?id=@x.Id">Zavrsi</a>
+            }
+            else
+            {
+                <a class="btn btn-danger glyphicon glyphicon-edit" href="/Ulaz/Index?id=@x.Id"></a>
+            }
+        </th>
+    </tr>
+    }
+</table>

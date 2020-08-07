@@ -1,0 +1,107 @@
+﻿@using Pilana.Models
+@{
+    ViewBag.Title = "Narudzba stavke";
+    Klijent k = (Klijent)ViewData["k"];
+    Narudzba n = (Narudzba)ViewData["n"];
+    List<Proizvod> p = (List<Proizvod>)ViewData["p"];
+    List<NarudzbaProizvodi> np = (List<NarudzbaProizvodi>)ViewData["np"];
+    double Ukupno = (double)ViewData["Ukupno"];
+}
+
+Klijent: <label> @k.Ime @k.Prezime</label> <br />
+Adresa: <label> @k.Adresa</label> <br />
+Kontakt broj: <label> @k.KontaktBroj</label> <br />
+Narudžba datuma: <label> @n.Datum</label> <br />
+<a class="btn btn-info" href="/Narudzba/Index?id=@k.Id">Nazad</a>
+
+<br /><br />
+<form action="/NarudzbaProizvodi/Snimi" class="form-inline">
+    <input type="hidden" value="@n.Id" name="NarudzbaId" />
+    <input type="hidden" value="@k.Id" name="KlijentId" />
+
+    <label>Proizvod:</label>
+    <select class="form-control" name="ProizvodId" id="ProizvodId">
+        @foreach (Proizvod x in p)
+        {
+            if (x.Poluproizvod == true)
+            {
+                <option class="form-horizontal" value="@x.Id">@x.Naziv Duzina: @x.Duzina Sirina: @x.Sirina Debljina @x.Visina Cijena: @x.CijenaM3 Poluproizvod Stanje: @x.Kolicina</option>
+            }
+            else
+            {
+                <option class="form-horizontal" value="@x.Id">@x.Naziv Duzina: @x.Duzina Sirina: @x.Sirina Debljina @x.Visina Cijena: @x.CijenaM3 Proizvod Stanje: @x.Kolicina</option>
+            }
+
+        }
+    </select>
+
+
+    <input class="form-control" type="number" name="Kolicina" min="1" placeholder="Količina" required style="width: 100px" />
+
+    <input class="btn btn-success" type="submit" value="Sačuvati" />
+</form>
+
+<br /><br />
+<label>Narudžba stavke:</label>
+<table class="table table-striped">
+    <thead>
+    <th>Proizvod:</th>
+    <th>Cijena/kom.:</th>
+    <th>Količina:</th>
+    <th>Ukupno:</th>
+    <th>Akcija:</th>
+    </thead>
+    @foreach (NarudzbaProizvodi x in np)
+    {
+    <tr>
+        <th>
+            @x.Proizvod.Naziv
+        </th>
+        <th>
+            @x.CijenaKomad
+        </th>
+        <th>
+            @x.Kolicina
+        </th>
+        <th>
+            @(x.Kolicina * x.CijenaKomad)
+        </th>
+        <th>
+            <a class="btn btn-danger glyphicon glyphicon-remove" href="/NarudzbaProizvodi/Skini?id=@k.Id&Nid=@np[0].NarudzbaId&Pid=@x.Id"></a>
+        </th>
+    </tr>
+    }
+</table>
+
+ <form action="/NarudzbaProizvodi/DodatniTrosak" style="background-color: #f5f5f5">
+     <input type="hidden" value="@n.Id" name="NarudzbaId" />
+     <input type="hidden" value="@k.Id" name="KlijentId" />
+
+     <table>
+         <tbody>
+             <tr>
+                 <td> <label>Ukupno:</label> </td>
+                 <td> @Ukupno </td>
+             </tr>
+             <tr>
+                 <td> <label>Popust (%):</label> </td>
+                 <td> <input class="form-control" type="number" name="Popust" min="0" placeholder="Popust" value="@n.Popust" required style="width: 100px" /> </td>
+             </tr>
+             <tr>
+                 <td> <label>Prevoz:</label> </td>
+                 <td> <input class="form-control" type="number" name="Prevoz" min="0" placeholder="Prevoz" value="@n.Prevoz" required style="width: 100px" /> </td>
+             </tr>
+             <tr>
+                 <td> <label>SUM:</label> </td>
+                 <td> <label>@(n.Prevoz + Ukupno - (Ukupno * n.Popust / 100))</label> </td>
+             </tr>
+             <tr>
+                 <td> </td>
+                 <td> <input class="btn btn-success" type="submit" value="Sacuvati" style="float: right" /> </td>
+             </tr>
+         </tbody>
+     </table>
+
+     
+ </form>
+

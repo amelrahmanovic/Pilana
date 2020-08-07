@@ -1,0 +1,144 @@
+﻿@using Pilana.Models
+@{
+    ViewBag.Title = "Proizvod";
+    Proizvod p = (Proizvod)ViewData["p"];
+    Valuta v = (Valuta)ViewData["v"];
+    List<Klasa> k = (List<Klasa>)ViewData["k"];
+    List<Proizvod> pro = (List<Proizvod>)ViewData["pro"];
+}
+
+@if (p.Kolicina != 0)
+{
+    <h2>Postojeći Proizvod:</h2>
+}
+else
+{
+    <h2>Novi Proizvod:</h2>
+}
+
+<form action="/Proizvod/Snimi">
+    <input type="hidden" value="@p.Id" name="Id" />
+
+    <div class="form-inline">
+        <label>Proizvod:</label>
+        <input class="form-control" type="text" name="Naziv" value="@p.Naziv" required />
+    </div>
+
+    <br />
+    <div class="form-inline">
+        <div class="form-group">
+            <label>Dužina (cm):</label>
+            <input class="form-control" type="text" name="Duzina" value="@p.Duzina" required style="width: 80px" />
+        </div>
+        <div class="form-group">
+            <label>Širina (cm):</label>
+            <input class="form-control" type="text" name="Sirina" value="@p.Sirina" required style="width: 80px" />
+        </div>
+        <div class="form-group">
+            <label>Debljina (cm):</label>
+            <input class="form-control" type="text" name="Visina" value="@p.Visina" required style="width: 80px" />
+        </div>
+    </div>
+
+    <div class="form-inline">
+        <div class="form-inline">
+            <label>Proizvod: Proizvod</label>
+            @if (p.Poluproizvod == true)
+            {
+                <input type="radio" name="Poluproizvod" value="Proizvod">
+                <b>/</b>
+                <input type="radio" name="Poluproizvod" value="Poluproizvod" checked> <label>Poluproizvod</label>
+            }
+            else
+            {
+                <input type="radio" name="Poluproizvod" value="Proizvod" checked>
+                <b>/</b>
+                <input type="radio" name="Poluproizvod" value="Poluproizvod"> <label>Poluproizvod</label>
+            }
+        </div>
+
+        <div class="form-group">
+            <label>Cijena/komad (@v.Val):</label>
+            <input class="form-control" type="text" name="CijenaM3" value="@p.CijenaM3" style="width: 80px" required />
+            <a class="btn btn-info" href="/Valuta/">+</a>
+        </div>
+
+        <div class="form-group">
+            <label>Količina:</label>
+            <input class="form-control" type="number" name="Kolicina" value="@p.Kolicina" required style="width: 80px" />
+        </div>
+    </div>
+
+    <div class="form-inline">
+        <label>Klasa:</label>
+        <select class="form-control" name="Klasa" id="Klasa">
+            @foreach (Klasa x in k)
+            {
+                if (x.Id == p.KlasaId)
+                {
+                    <option class="form-control" value="@x.Id" selected>@x.Naziv</option>
+                }
+                else
+                {
+                    <option class="form-control" value="@x.Id">@x.Naziv</option>
+                }
+            }
+        </select>
+        <a class="btn btn-info" href="/Klasa/">+</a>
+        <input class="btn btn-success" type="submit" value="Sacuvati" />
+    </div>
+    <br />
+
+</form>
+
+<br />
+<a class="btn btn-info" href="/Proizvod?Sort=2">Sortiraj opadajući</a>
+<a class="btn btn-info" href="/Proizvod?Sort=3">Sortiraj rastući</a>
+<table class="table table-striped">
+    <thead>
+    <th>Naziv:</th>
+    <th>Dužina cm / Širina cm / Debljina cm:</th>
+    <th>Cijena (@v.Val):</th>
+    <th>Metara kubnih na stanju:</th>
+    <th>Vrsta:</th>
+    <th>Klasa:</th>
+    <th>Količina (Br. kom.):</th>
+    </thead>
+
+    @foreach (Proizvod x in pro)
+    {
+        <tr>
+            <th>
+                @x.Naziv
+            </th>
+            <th>
+                @x.Duzina cm / @x.Sirina cm / @x.Visina cm
+            </th>
+            <th>
+                @x.CijenaM3
+            </th>
+            <th>
+                @(((x.Duzina / 100) * (x.Sirina / 100) * (x.Visina / 100)) * x.Kolicina)
+            </th>
+            <th>
+                @if (x.Poluproizvod == true)
+                {
+                    <label>Poluproizvod</label>
+                }
+                else
+                {
+                    <label>Proizvod</label>
+                }
+            </th>
+            <th>
+                @x.Klasa.Naziv
+            </th>
+            <th>
+                @x.Kolicina
+            </th>
+            <th>
+                <a class="btn btn-default" href="/Proizvod/Index?id=@x.Id">Edit</a>
+            </th>
+        </tr>
+    }
+</table>

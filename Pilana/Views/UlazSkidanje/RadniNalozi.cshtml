@@ -1,0 +1,70 @@
+﻿@using Pilana.Models;
+@{
+    ViewBag.Title = "Radni nalozi";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<UlazSkidanje> u = (List<UlazSkidanje>)ViewData["u"];
+    int? br = (int?)ViewData["br"];
+}
+
+<a class="btn btn-success" href="/Home">Nazad</a>
+
+<form action="/UlazSkidanje/RadniNalozi" class="form-inline">
+    <h2>Pretraga naloga</h2>
+    <label>Broj završenih naloga:</label>
+    @if (br != null)
+    {
+        <input class="form-control" type="number" name="Naloga" min="1" value="@br" required style="width: 100px" />
+    }
+    else
+    {
+        <input class="form-control" type="number" name="Naloga" min="1" value="30" required style="width: 100px" />
+    }
+
+    <input type="submit" value="Zatvoreni nalozi" class="btn btn-success" />
+    <a class="btn btn-success" href="/UlazSkidanje/RadniNalozi">Otvoreni nalozi</a>
+</form>
+
+@if (br == null)
+{
+    <h2>Nalozi u obradi:</h2>
+}
+else
+{
+    <h2>Zavrseni nalozi:</h2>
+}
+
+<table class="table table-striped">
+    <thead>
+    <th>Broj balvana:</th>
+    <th>Napomena:</th>
+    <th>Datum i vrijeme kreiranja:</th>
+    <th>Akcija:</th>
+    </thead>
+
+    @foreach (UlazSkidanje x in u)
+    {
+        <tr>
+            <th>
+                @x.SkinutoBalvana
+            </th>
+            <th>
+                @x.Napomena
+            </th>
+            <th>
+                @x.DatumKreiranja
+            </th>
+            <th>
+                <a target="_blank" class="btn btn-default" href="~/Reports/RadniNalog.aspx?id=@x.Id"> <div class="glyphicon glyphicon-print"></div> Print radni nalog</a>
+                @if (br == null)
+                {
+                    <a class="btn btn-danger" href="/UlazSkidanje/Zavrsi?Id=@x.Id">Završi</a>
+                    <a class="btn btn-info" href="/UlazSkidanjeProizvod/Index?Id=@x.Id">Pregled stavki naloga</a>
+                }
+                else
+                {
+                    <a class="btn btn-info" href="/UlazSkidanjeProizvod/Index?Id=@x.Id&Block=1">Pregled stavki naloga</a>
+                }
+            </th>
+        </tr>
+    }
+</table>

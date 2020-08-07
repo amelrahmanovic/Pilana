@@ -1,0 +1,88 @@
+﻿@using Pilana.Models
+
+@{
+    ViewBag.Title = "Skidanje sa skladista";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    Ulaz u = (Ulaz)ViewData["u"];
+    List<UlazSkidanje> us = (List<UlazSkidanje>)ViewData["us"];
+    UlazSkidanje use = (UlazSkidanje)ViewData["use"];
+    int BrojSkinutihBalvana = (int)ViewData["BrojSkinutihBalvana"];
+    Valuta v = (Valuta)ViewData["v"];
+}
+
+<label>Datum dostave: @u.DatumDostave</label> <br />
+<label>Broj balvana: @u.BrojBalvana / Skinuto balvana @BrojSkinutihBalvana</label> <br />
+<label>Cijena po metru kubnom: @u.CijenaM3 @v.Val</label> <br />
+<label>Klasa: @u.Klasa.Naziv</label> <br />
+<label>Metara kubnih: @u.M3</label> <br /><br />
+
+<a class="btn btn-success" href="/Ulaz">Nazad</a> <br /><br />
+
+@if (u.BrojBalvana != @BrojSkinutihBalvana)
+{
+    if (use.SkinutoBalvana != 0)
+    {
+        <h2>Postojeći radni nalog:</h2>
+    }
+    else
+    {
+        <h2>Novi radni nalog:</h2>
+    }
+    <br />
+    <form action="/UlazSkidanje/Snimi" class="form-inline">
+        <input type="hidden" name="UlazId" value="@u.Id" />
+        <input type="hidden" name="ulazSkidanjeId" value="@use.Id" />
+        <div class="form-group">
+            <label>Balvana:</label>
+            <input class="form-control" type="number" name="BrojBalvana" value="@use.SkinutoBalvana" min="1" max="@(u.BrojBalvana-BrojSkinutihBalvana)" required style="width: 100px" />
+        </div>
+        <div class="form-group">
+            <label>Datum kreiranja:</label>
+            @if (@use.DatumKreiranja.ToString() == "1.1.0001. 0:00:00")
+            {
+                <input class="form-control" type="text" name="DatumKreiranja" value="@DateTime.Now" required style="width: 170px" />
+            }
+            else
+            {
+                <input class="form-control" type="text" name="DatumKreiranja" value="@use.DatumKreiranja" required style="width: 170px" />
+            }
+        </div>
+        <div class="form-group">
+            <label>Napomena:</label>
+            <input class="form-control" type="text" name="Napomena" placeholder="Napomena" style="width: 100px" />
+        </div>
+        <input class="btn btn-success" type="submit" value="Snimi radni nalog" />
+    </form>
+}
+
+<br />
+<table class="table table-striped">
+    <thead>
+    <th>Broj balvana:</th>
+    <th>Napomena:</th>
+    <th>Datum i vrijeme kreiranja:</th>
+    <th>Akcija:</th>
+    </thead>
+
+    @foreach (UlazSkidanje x in us)
+    {
+        <tr>
+            <th>
+                @x.SkinutoBalvana
+            </th>
+            <th>
+                @x.Napomena
+            </th>
+            <th>
+                @x.DatumKreiranja
+            </th>
+            <th>
+                <a class="btn btn-primary" href="/UlazSkidanjeProizvod/Index?Id=@x.Id">Zahtjevi/ napravljeno</a>
+                @if (u.BrojBalvana != @BrojSkinutihBalvana)
+                {
+                    <a class="btn btn-default glyphicon glyphicon-edit" href="/UlazSkidanje/Index?Id=@x.UlazId&UlazSkidanjeId=@x.Id"></a>
+                }
+            </th>
+        </tr>
+    }
+</table>
